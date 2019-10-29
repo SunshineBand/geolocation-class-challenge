@@ -15,27 +15,24 @@ class App extends React.Component {
     temp: null,
     date: new Date()
   }
-
-  componentDidMount() {
-    window.navigator.geolocation.getCurrentPosition(
-      position => this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }),
-      error => this.setState({ errorMessage: error.message })
-    );
+  
+  setWeatherDetail() {
     
     console.log('this ran');
+    // only request if have a position
     axios.post("http://127.0.0.1:5000/weather", {
-      lat: "50",
-      long: "-20"
+      lat: this.state.latitude,
+      long: this.state.longitude
     })
     .then(response => {
       console.log('SUCCESS');
       console.log(response.data);
-      this.setState({
-        weatherDesc: response.data.description,
-        temp: response.data.temp
+      this.setState((prevState, props) => {
+        console.log(prevState);
+        return {
+          weatherDesc: response.data.description,
+          temp: response.data.temp
+        }
       })
     })
     .catch(error => {
@@ -45,7 +42,18 @@ class App extends React.Component {
     .finally(() => {
       console.log('API call done');
     });
-  };
+  }
+
+  componentDidMount() {
+    window.navigator.geolocation.getCurrentPosition(
+      position => this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }),
+      error => this.setState({ errorMessage: error.message })
+    );
+    this.setWeatherDetail()
+  }
 
   isItWarm() {
     const { latitude } = this.state;
