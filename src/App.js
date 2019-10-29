@@ -13,14 +13,15 @@ class App extends React.Component {
       date: new Date()
     };
     window.navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState((prevState) => {
-            
-          })
-        },
-        (error) => {
-          console.log(error)
-        }
+      (position) => {
+        console.log(position.coords.latitude);
+        this.setState((prevState, currentProps) => {
+          return { latitude : position.coords.latitude };
+        })
+      },
+      (error) => {
+        console.log(error)
+      }
     );
   };
 
@@ -44,7 +45,6 @@ class App extends React.Component {
   };
 
   render() {
-    console.log(this.state.count);
     const { latitude } = this.state;
     return (
       <div>
