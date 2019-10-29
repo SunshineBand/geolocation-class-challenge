@@ -20,9 +20,10 @@ class App extends React.Component {
     
     console.log('this ran');
     // only request if have a position
+    const { latitude, longitude } = this.state;
     axios.post("http://127.0.0.1:5000/weather", {
-      lat: this.state.latitude,
-      long: this.state.longitude
+      lat: latitude,
+      long: longitude
     })
     .then(response => {
       console.log('SUCCESS');
@@ -52,7 +53,6 @@ class App extends React.Component {
       }),
       error => this.setState({ errorMessage: error.message })
     );
-    this.setWeatherDetail()
   }
 
   isItWarm() {
@@ -75,9 +75,12 @@ class App extends React.Component {
   };
 
   render() {
-    const { latitude, errorMessage, weatherDesc, temp } = this.state;
+    const { latitude, longitude, errorMessage, weatherDesc, temp } = this.state;
     return (
       <>
+        <p>{latitude}</p>
+        
+        <p>{longitude}</p>
         { errorMessage || <Clock
           icon={latitude ? this.getClockIcon() : null}
           timezone={"Sydney/Australia"}
