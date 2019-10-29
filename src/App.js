@@ -39,10 +39,8 @@ class App extends React.Component {
 
   render() {
     const { latitude, errorMessage} = this.state;
-
     return (
       <div>
-        {value}
         { errorMessage || <Clock
           icon={latitude ? this.getClockIcon() : null}
           timezone={"Sydney/Australia"}
