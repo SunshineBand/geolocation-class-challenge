@@ -1,8 +1,11 @@
 import React from 'react';
 
 class Clock extends React.Component {
+
+  state = {
+    date: new Date()
+  }
   render() { 
-    console.log(this.props);
     return (
       <>
         <h3>Timezone: {this.props.timezone}</h3>

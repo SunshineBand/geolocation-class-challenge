@@ -6,22 +6,15 @@ import snow from './images/snow.png';
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      latitude: null,
-      date: new Date()
-    };
+  state = {
+    latitude: null,
+    date: new Date()
+  }
+
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position.coords.latitude);
-        this.setState((prevState, currentProps) => {
-          return { latitude : position.coords.latitude };
-        })
-      },
-      (error) => {
-        console.log(error)
-      }
+      position => this.setState({ latitude: position.coords.latitude }),
+      error => this.setState({ errorMessage: error.message })
     );
   };
 
@@ -45,18 +38,19 @@ class App extends React.Component {
   };
 
   render() {
-    const { latitude } = this.state;
+    const { latitude, errorMessage} = this.state;
+
     return (
       <div>
-        {this.state.latitude}
-        <Clock
+        {value}
+        { errorMessage || <Clock
           icon={latitude ? this.getClockIcon() : null}
           timezone={"Sydney/Australia"}
           date={new Date()}
-        />
+        /> }
       </div>
     );
-  }
+  };
 };
 
 export default App;
