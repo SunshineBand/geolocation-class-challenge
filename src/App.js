@@ -16,43 +16,35 @@ class App extends React.Component {
     date: new Date()
   }
   
-  setWeatherDetail() {
-    
-    console.log('this ran');
-    // only request if have a position
-    const { latitude, longitude } = this.state;
-    axios.post("http://127.0.0.1:5000/weather", {
-      lat: latitude,
-      long: longitude
-    })
-    .then(response => {
-      console.log('SUCCESS');
-      console.log(response.data);
-      this.setState((prevState, props) => {
-        console.log(prevState);
-        return {
-          weatherDesc: response.data.description,
-          temp: response.data.temp
-        }
+  async setWeatherDetail(latitude, longitude) {
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/weather", {
+        lat: latitude,
+        long: longitude
       })
-    })
-    .catch(error => {
+      console.log(response, 'first response');
+      return {
+        weatherDesc: response.data.description,
+        temp: response.data.temp
+      }
+    }
+    catch (err) {
       console.log('ERR');
-      console.log(error);
-    })
-    .finally(() => {
-      console.log('API call done');
-    });
+      console.log(err);
+    }
   }
 
   componentDidMount() {
-    window.navigator.geolocation.getCurrentPosition(
-      position => this.setState({
+    window.navigator.geolocation.getCurrentPosition(async position => {
+      const response = await this.setWeatherDetail(position.coords.latitude, position.coords.longitude)
+      console.log(response, 'second response');
+      this.setState({
         latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }),
-      error => this.setState({ errorMessage: error.message })
-    );
+        longitude: position.coords.longitude,
+        weatherDesc: response.weatherDesc,
+        temp: response.temp
+      })
+    });
   }
 
   isItWarm() {
